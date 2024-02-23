@@ -11,7 +11,7 @@ import SwiftUI
 struct InspectionApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            DescriptionCellView(title: "Every inch of the room has been sanitized")
         }
     }
 }

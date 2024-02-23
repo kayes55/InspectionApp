@@ -47,9 +47,15 @@ struct DetailsView: View {
                         .foregroundColor(.gray)
                 }
                 .padding()
-                VStack(spacing: 0) {
-                    AccordionView(title: "Section", opacity: 0.1, content: {
-                        AccordionView(title: "BedRoom", opacity: 0.05) {
+                VStack(spacing: 5) {
+                    AccordionView(title: "Cleanliness Inspection", opacity: 0.1, content: {
+                        AccordionView(title: "Bedrooms", opacity: 0.05) {
+                            Text("Inception")
+                        }
+                    })
+                    
+                    AccordionView(title: "AM Inspection", opacity: 0.1, content: {
+                        AccordionView(title: "Living Areas", opacity: 0.05) {
                             Text("Inception")
                         }
                     })
