@@ -8,14 +8,38 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var isModalPresented = false
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationView {
+            VStack {
+                ScrollView(showsIndicators: false) {
+                    ForEach (0..<InspectionDataFactory.shared.inspecedData().count, id:\.self) { item in
+                        HomeCellView(title: InspectionDataFactory.shared.inspecedData()[item].title, subtitle: InspectionDataFactory.shared.inspecedData()[item].subtitle, date: InspectionDataFactory.shared.inspecedData()[item].date)
+                            .onTapGesture {
+                                isModalPresented = true
+                            }
+                    }
+                    
+                }
+                .padding()
+            }
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                        Text("Inspection")
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Image(systemName: "plus")
+                }
+            }
+            .toolbarBackground(Color.green, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .sheet(isPresented: $isModalPresented) {
+                NavigationView {
+                    DetailsView(isPresented: $isModalPresented)
+                }
+            }
         }
-        .padding()
+        
     }
 }
 
