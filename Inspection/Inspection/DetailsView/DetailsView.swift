@@ -9,6 +9,15 @@ import SwiftUI
 
 struct DetailsView: View {
     @Binding var isPresented: Bool
+    @State private var offsetX: CGFloat = 0
+    @State private var isDragging = false
+    
+    @State private var cells1 = Array(1...3)
+    @State private var cells2 = Array(1...3)
+    @State private var activeCell1: Int?
+    @State private var activeCell2: Int?
+    @State private var cellOffsets1: [CGFloat] = Array(repeating: 0, count: 3)
+    @State private var cellOffsets2: [CGFloat] = Array(repeating: 0, count: 3)
         
     var body: some View {
         VStack {
@@ -50,21 +59,118 @@ struct DetailsView: View {
                 VStack(spacing: 5) {
                     AccordionView(title: "Cleanliness Inspection", opacity: 0.1, content: {
                         AccordionView(title: "Bedrooms", opacity: 0.05) {
-                            Text("Inception")
+                            ScrollView(showsIndicators: false) {
+                                VStack(spacing: 0) {
+                                    ForEach(cells1, id: \.self) { index in
+                                        DescriptionCellView(title: "Every inch of the room has been sanitized", index: index, isActive: self.bindingForIndex(index, activeCell: $activeCell1))
+                                            .offset(x: self.cellOffsets1[index - 1])
+                                            .gesture(
+                                                DragGesture()
+                                                    .onChanged { value in
+                                                        self.activeCell1 = index
+                                                        self.cellOffsets1[index - 1] = value.translation.width
+                                                    }
+                                                    .onEnded { value in
+                                                        withAnimation {
+                                                            if value.translation.width < -300 {
+                                                                // Swipe beyond threshold, show delete button
+                                                                self.cellOffsets1[index - 1] = -300
+                                                            } else {
+                                                                // Reset to original position
+                                                                self.cellOffsets1[index - 1] = 0
+                                                            }
+                                                        }
+                                                        
+                                                    }
+                                            )
+                                            .onTapGesture {
+                                                print("Tap \(index)")
+                                            }
+                                    }
+                                }
+                                
+                            }
                         }
                     })
                     
                     AccordionView(title: "AM Inspection", opacity: 0.1, content: {
-                        AccordionView(title: "Living Areas", opacity: 0.05) {
-                            Text("Inception")
+                        AccordionView(title: "Living areas", opacity: 0.05) {
+                            ScrollView(showsIndicators: false) {
+                                VStack(spacing: 0) {
+                                    ForEach(cells2, id: \.self) { index in
+                                        DescriptionCellView(title: "Every inch of the room has been sanitized", index: index, isActive: self.bindingForIndex(index, activeCell: $activeCell2))
+                                            .offset(x: self.cellOffsets2[index - 1])
+                                            .gesture(
+                                                DragGesture()
+                                                    .onChanged { value in
+                                                        self.activeCell2 = index
+                                                        self.cellOffsets2[index - 1] = value.translation.width
+                                                    }
+                                                    .onEnded { value in
+                                                        withAnimation {
+                                                            if value.translation.width < -300 {
+                                                                // Swipe beyond threshold, show delete button
+                                                                self.cellOffsets2[index - 1] = -300
+                                                            } else {
+                                                                // Reset to original position
+                                                                self.cellOffsets2[index - 1] = 0
+                                                            }
+                                                        }
+                                                        
+                                                    }
+                                            )
+                                    }
+                                }
+                                
+                            }
                         }
                     })
                 }
+                
+                CompleteButton() {
+                    // make some action here
+                }
+                    .padding(.vertical)
             }
             
         }
         .navigationBarHidden(true)
         
     }
+    
+    private func bindingForIndex(_ index: Int, activeCell: Binding<Int?>) -> Binding<Bool> {
+        return Binding<Bool>(
+            get: {
+                return activeCell.wrappedValue == index
+            },
+            set: { newValue in
+                if newValue {
+                    activeCell.wrappedValue = index
+                } else {
+                    activeCell.wrappedValue = nil
+                }
+            }
+        )
+    }
 }
 
+struct CompleteButton: View {
+    var action: () -> Void
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 10) {
+                Image(systemName: "checkmark.circle.fill")
+                    .font(.system(size: 24))
+                    .foregroundColor(.white)
+                
+                Text("Complete")
+                    .foregroundColor(.white)
+                    .font(.title2)
+            }
+            .padding(.horizontal)
+            .padding(.vertical, 8)
+            .background(Color.indigo)
+            .cornerRadius(8)
+        }
+    }
+}

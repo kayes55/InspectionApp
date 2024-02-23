@@ -11,7 +11,7 @@ struct AccordionView<Content: View>: View {
     let title: String
     let opacity: Double
     let content: () -> Content
-    @State private var isExpanded = false
+    @State private var isExpanded = true
 
     var body: some View {
         VStack(spacing: 0) {
