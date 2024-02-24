@@ -45,7 +45,7 @@ struct DetailsView: View {
                 }
                 .padding()
                 
-                ScrollView {
+                ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading) {
                         HStack {
                             Text("Holiday Inn Express Franklin")
@@ -125,6 +125,12 @@ struct DetailsView: View {
                                                             
                                                         }
                                                 )
+                                                .onTapGesture {
+                                                    withAnimation {
+                                                        // Toggle the visibility of the overlay view
+                                                        isShowingOverlay.toggle()
+                                                    }
+                                                }
                                         }
                                     }
                                     

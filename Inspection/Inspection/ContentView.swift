@@ -25,10 +25,13 @@ struct ContentView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                        Text("Inspection")
+                        Text("Inspections")
+                        .font(.system(size: 19, weight: .bold))
+                        .foregroundColor(.white)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Image(systemName: "plus")
+                        .foregroundColor(.white)
                 }
             }
             .toolbarBackground(Color.green, for: .navigationBar)
